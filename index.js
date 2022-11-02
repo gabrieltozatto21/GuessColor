@@ -23,32 +23,60 @@ var arrCores = [
     'skyblue', 'slateblue', 'slategray', 'slategrey', 'snow', 'springgreen', 'steelblue', 'tan', 'teal', 'thistle',
     'tomato', 'turquoise', 'violet', 'wheat', 'white', 'whitesmoke', 'yellow', 'yellowgreen'
 ];
-// Array das dez cores Aleatorias
+
 var arrCoresAleatorias = [];
-// Percorre todo o array de cores
-for (var i = 0; i < arrCores.length; i++) {
-    // Adiciona 10 cores aleatoriamente no array 
-    arrCoresAleatorias.push(arrCores[Math.floor(Math.random() * arrCores.length)]);
-    // Se o array estiver cheio, o ciclo encerra
-    if (arrCoresAleatorias.length == 10) {
-        break;
-    }
-}
-// Variável para adicionar a cor escolhida aleatoriamente entre as dez
 var corSelecionada = '';
-// Percorre o vetor com as dez cores escolhidas aleatoriamente
-for (var i = 0; i < arrCoresAleatorias.length; i++) {
+
+function selecionaCores(){
+    arrCoresAleatorias = [];
+    // Array das dez cores Aleatorias
+    // Percorre todo o array de cores
+    for (var i = 10; i != 0; i--) {
+        // Adiciona 10 cores aleatoriamente no array
+        arrCoresAleatorias.push(arrCores[Math.floor(Math.random() * arrCores.length)]);
+        // Se o array estiver cheio, o ciclo encerra
+    }
+    
     corSelecionada = arrCoresAleatorias[Math.floor(Math.random() * arrCoresAleatorias.length)];
+    coresSelecionadas.innerHTML = `<p>[${arrCoresAleatorias}]</p>`;
 }
-// Adiciona as cores na página
-coresSelecionadas.innerHTML = `<p>[${arrCoresAleatorias}]</p>`;
-// Dispara o evento de click
+
+selecionaCores();
+
 btnConfirmar.addEventListener('click', () => {
     if (nomeDaCor.value == corSelecionada) {
-        document.body.style.backgroundColor = corSelecionada;
         alert('Parabéns');
+        selecionaCores();
     }
     else {
-        alert('Tente novamente!');
+
+        var diferenca = Math.abs(nomeDaCor.value.length - corSelecionada.length);
+
+        var menorOuMaior = nomeDaCor.value.length < corSelecionada.length
+        ? "Mais"
+        : "Menos"
+        
+
+        Toastify({
+            text: `Você errou!
+             a cor correta tem ${diferenca} caractéres a ${menorOuMaior} de diferença
+             tente novamente!`,
+            duration: 5000,
+            position: "center",
+            className: "error",
+            style: {
+              background: "red",
+            }
+          }).showToast();
+          console.log(diferenca);
+
+        arrCoresAleatorias.splice(arrCoresAleatorias.indexOf(nomeDaCor.value), 1)
+        coresSelecionadas.innerHTML = `<p>[${arrCoresAleatorias}]</p>`;
     }
+
+    document.body.style.backgroundColor = nomeDaCor.value;
+    nomeDaCor.value = "";
 });
+
+console.log(corSelecionada)
+console.log(arrCoresAleatorias.length)
